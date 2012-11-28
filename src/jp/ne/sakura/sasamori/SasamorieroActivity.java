@@ -6,7 +6,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -38,6 +41,9 @@ public class SasamorieroActivity extends Activity {
 		
 		// javascriptを有効にする
 		webview.getSettings().setJavaScriptEnabled(true);
+		
+		// javascriptから呼ばれるファンクションをセット
+		webview.addJavascriptInterface(new JSInterface(), "native_call");
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -53,6 +59,14 @@ public class SasamorieroActivity extends Activity {
 			return true;
 		}else{
 			return false;
+		}
+	}
+	
+	class JSInterface {
+		public void executeBrowser(String url) {
+			Uri uri = Uri.parse(url);
+			Intent i = new Intent(Intent.ACTION_VIEW,uri);
+			startActivity(i);
 		}
 	}
 	
